@@ -1,38 +1,37 @@
 package guru.qa;
 
-import com.codeborne.selenide.*;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Selectors.byText;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.open;
 
 /**
  * Проверка на наличие кода для JUnit5 на странице SoftAssertions
- * в разделе Wiki проекта Selenide в Github
+ * раздела Wiki проекта Selenide в Github
  */
-public class TestWikiSoftAssertions {
-
-    @BeforeAll
-    static void settings() {
-        System.setProperty("webdriver.chrome.driver","src/tools/chromedriver.exe");
-        Configuration.browserSize = "1440x900";
-    }
-
-    @BeforeEach
-    void openURL() {
-        // Открываем страницу Selenide в Github
-        open("https://github.com/selenide/selenide");
-    }
-
-    @AfterEach
-    void closesWebDriver(){
-        //После каждого теста закрываем веб-дайвер
-        closeWebDriver();
-    }
+public class TestWikiSoftAssertions extends BaseTest {
 
     @Test
     void checkWikiSoftAssertions(){
 
-        //region
+        //region Selenide in Github
+        // Открываем страницу Selenide в Github
+        open("https://github.com/selenide/selenide");
+
+        // Переходим в раздел Wiki
+        $("#wiki-tab").click();
+
+        // Проверяем, что в списке страниц есть SoftAssertions
+        $("#wiki-pages-filter").setValue("SoftAssertions");
+        $("#wiki-pages-box").shouldHave(text("SoftAssertions"));
+
+        // Переходим в SoftAssertions
+        $(byText("SoftAssertions")).click();
+
+        // Проверяем пример кода для JUnit5
+        $("#wiki-body").shouldHave(text("Using JUnit5 extend test class"));
         //endregion
     }
 }
